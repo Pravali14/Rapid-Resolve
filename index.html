@@ -1,94 +1,139 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Team Signup and Login</title>
+    <title>Team Management System</title>
     <style>
-        /* Add your CSS styling here */
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-        }
-
-        .container {
-            max-width: 600px;
-            margin: 0 auto;
-            padding: 20px;
-        }
-
-        .section {
-            display: none;
-            margin-bottom: 20px;
-        }
-
-        .section input {
-            display: block;
-            width: 100%;
-            padding: 10px;
-            margin-bottom: 10px;
-            font-size: 16px;
-        }
-
-        .section button {
-            padding: 10px 20px;
-            font-size: 16px;
-            cursor: pointer;
-        }
-
-        #message {
-            margin-bottom: 20px;
-            font-weight: bold;
-        }
+        /* Add your styling here */
     </style>
 </head>
-
 <body>
-    <div class="container">
-        <h1>Team Signup and Login</h1>
-        <div id="message"></div>
-        <!-- Signup Section -->
-        <div id="signup-section" class="section">
-            <h2>Signup</h2>
-            <input type="text" id="user-username" placeholder="Username" required>
-            <input type="email" id="user-email" placeholder="Email" required>
-            <input type="text" id="user-org" placeholder="Organization" required>
-            <input type="password" id="user-password" placeholder="Password" required>
-            <button onclick="signupUser()">Signup</button>
-            <button onclick="showLogin()">Go to Login</button>
-        </div>
-
-        <!-- Login Section -->
-        <div id="login-section" class="section">
-            <h2>Login</h2>
-            <input type="text" id="login-username" placeholder="Username" required>
-            <input type="password" id="login-password" placeholder="Password" required>
-            <button onclick="loginUser()">Login</button>
-            <button onclick="showSignup()">Go to Signup</button>
-        </div>
-
-        <!-- Join Team Section -->
-        <div id="join-team-section" class="section">
-            <h2>Join Team</h2>
-            <input type="text" id="join-team-code" placeholder="Enter Team Code" required>
-            <input type="password" id="join-team-password" placeholder="Enter Team Password" required>
-            <button onclick="joinTeam()">Join Team</button>
-            <button onclick="showLogin()">Back to Login</button>
-        </div>
-
-        <!-- Team Leader Section -->
-        <div id="team-leader-section" class="section">
-            <h2>Team Leader Home</h2>
-            <p>Welcome, <span id="leader-name"></span>!</p>
-            <button onclick="showPendingRequests()">View Pending Requests</button>
-            <ul id="pending-requests"></ul>
-        </div>
+    <!-- Signup Forms -->
+    <div id="signup-section">
+        <h2>Signup as User</h2>
+        <input type="text" id="user-username" placeholder="Username" required>
+        <input type="email" id="user-email" placeholder="Email" required>
+        <input type="text" id="user-org" placeholder="Organization" required>
+        <input type="password" id="user-password" placeholder="Password" required>
+        <button onclick="signupUser()">Signup as User</button>
+        <br><br>
+        <h2>Signup as Team Leader</h2>
+        <input type="text" id="team-leader-username" placeholder="Username" required>
+        <input type="email" id="team-leader-email" placeholder="Email" required>
+        <input type="text" id="team-leader-org" placeholder="Organization" required>
+        <input type="password" id="team-leader-password" placeholder="Password" required>
+        <button onclick="signupTeamLeader()">Signup as Team Leader</button>
     </div>
 
+    <!-- Login Forms -->
+    <div id="login-section" style="display:none;">
+        <h2>Login as User</h2>
+        <input type="text" id="login-user-username" placeholder="Username" required>
+        <input type="password" id="login-user-password" placeholder="Password" required>
+        <button onclick="loginUser()">Login as User</button>
+        <br><br>
+        <h2>Login as Team Leader</h2>
+        <input type="text" id="login-team-leader-username" placeholder="Username" required>
+        <input type="password" id="login-team-leader-password" placeholder="Password" required>
+        <button onclick="loginTeamLeader()">Login as Team Leader</button>
+    </div>
+
+    <!-- Other Sections (Create Team, Join Team, etc.) -->
+    <!-- Add other sections as per your needs -->
+
+    <!-- Message Section -->
+    <div id="message" style="margin-top: 20px;"></div>
+
     <script>
-        // Utility function to display a message
+        // Store users and teams in local storage
+        let users = JSON.parse(localStorage.getItem('users')) || [];
+        let teams = JSON.parse(localStorage.getItem('teams')) || {};
+
+        function signupUser() {
+            const username = document.getElementById('user-username').value;
+            const email = document.getElementById('user-email').value;
+            const org = document.getElementById('user-org').value;
+            const password = document.getElementById('user-password').value;
+
+            if (username && email && org && password) {
+                if (users.find(u => u.username === username)) {
+                    showMessage('Username already exists. Please choose a different username.', 'error');
+                    return;
+                }
+
+                users.push({ username, email, org, password, role: 'user' });
+                localStorage.setItem('users', JSON.stringify(users)); // Save to local storage
+                showMessage('User signed up successfully! You can now log in.', 'success');
+                showLogin();
+            } else {
+                showMessage('Please fill in all fields.', 'error');
+            }
+        }
+
+        function signupTeamLeader() {
+            const username = document.getElementById('team-leader-username').value;
+            const email = document.getElementById('team-leader-email').value;
+            const org = document.getElementById('team-leader-org').value;
+            const password = document.getElementById('team-leader-password').value;
+
+            if (username && email && org && password) {
+                if (users.find(u => u.username === username)) {
+                    showMessage('Username already exists. Please choose a different username.', 'error');
+                    return;
+                }
+
+                users.push({ username, email, org, password, role: 'leader' });
+                teams[username] = { members: [], pendingRequests: [] };
+                localStorage.setItem('users', JSON.stringify(users)); // Save to local storage
+                localStorage.setItem('teams', JSON.stringify(teams)); // Save to local storage
+                showMessage('Team Leader signed up successfully! You can now log in.', 'success');
+                showLogin();
+            } else {
+                showMessage('Please fill in all fields.', 'error');
+            }
+        }
+
+        function loginUser() {
+            const username = document.getElementById('login-user-username').value;
+            const password = document.getElementById('login-user-password').value;
+
+            const user = users.find(u => u.username === username && u.password === password && u.role === 'user');
+            if (user) {
+                hideAll();
+                // Display the user home or other sections as needed
+                showMessage('User logged in successfully!', 'success');
+            } else {
+                showMessage('Invalid username or password.', 'error');
+            }
+        }
+
+        function loginTeamLeader() {
+            const username = document.getElementById('login-team-leader-username').value;
+            const password = document.getElementById('login-team-leader-password').value;
+
+            const leader = users.find(u => u.username === username && u.password === password && u.role === 'leader');
+            if (leader) {
+                hideAll();
+                // Display the team leader home or other sections as needed
+                loadPendingRequests(username);
+                showMessage('Team Leader logged in successfully!', 'success');
+            } else {
+                showMessage('Invalid username or password.', 'error');
+            }
+        }
+
+        function showLogin() {
+            document.getElementById('signup-section').style.display = 'none';
+            document.getElementById('login-section').style.display = 'block';
+        }
+
+        function hideAll() {
+            document.getElementById('signup-section').style.display = 'none';
+            document.getElementById('login-section').style.display = 'none';
+            // Hide other sections as needed
+        }
+
         function showMessage(message, type) {
             const messageDiv = document.getElementById('message');
             messageDiv.textContent = message;
@@ -97,114 +142,6 @@
                 messageDiv.textContent = '';
             }, 3000);
         }
-
-        // Function to handle signup
-        function signupUser() {
-            const username = document.getElementById('user-username').value;
-            const email = document.getElementById('user-email').value;
-            const org = document.getElementById('user-org').value;
-            const password = document.getElementById('user-password').value;
-
-            if (!username || !email || !org || !password) {
-                showMessage('All fields are required!', 'error');
-                return;
-            }
-
-            // Check if the user already exists
-            let users = JSON.parse(localStorage.getItem('users')) || [];
-            const userExists = users.find(user => user.username === username);
-            if (userExists) {
-                showMessage('Username already exists!', 'error');
-                return;
-            }
-
-            // Add the new user to localStorage
-            users.push({ username, email, org, password, role: 'user' });
-            localStorage.setItem('users', JSON.stringify(users));
-
-            showMessage('User signed up successfully!', 'success');
-            showLogin();
-        }
-
-        // Function to handle login
-        function loginUser() {
-            const username = document.getElementById('login-username').value;
-            const password = document.getElementById('login-password').value;
-
-            if (!username || !password) {
-                showMessage('Username and password are required!', 'error');
-                return;
-            }
-
-            // Retrieve users from localStorage
-            let users = JSON.parse(localStorage.getItem('users')) || [];
-            const user = users.find(u => u.username === username && u.password === password);
-
-            if (user) {
-                showMessage('Logged in successfully!', 'success');
-                if (user.role === 'leader') {
-                    document.getElementById('leader-name').textContent = username;
-                    showTeamLeaderHome();
-                } else {
-                    showJoinTeam();
-                }
-            } else {
-                showMessage('Invalid username or password.', 'error');
-            }
-        }
-
-        // Function to handle team joining
-        function joinTeam() {
-            const teamCode = document.getElementById('join-team-code').value;
-            const teamPassword = document.getElementById('join-team-password').value;
-
-            if (!teamCode || !teamPassword) {
-                showMessage('Team code and password are required!', 'error');
-                return;
-            }
-
-            // Retrieve teams from localStorage
-            let teams = JSON.parse(localStorage.getItem('teams')) || {};
-            if (teams[teamCode] && teams[teamCode].password === teamPassword) {
-                showMessage('Successfully joined the team!', 'success');
-            } else {
-                showMessage('Invalid team code or password.', 'error');
-            }
-        }
-
-        // Function to show the signup form
-        function showSignup() {
-            hideAll();
-            document.getElementById('signup-section').style.display = 'block';
-        }
-
-        // Function to show the login form
-        function showLogin() {
-            hideAll();
-            document.getElementById('login-section').style.display = 'block';
-        }
-
-        // Function to show the join team form
-        function showJoinTeam() {
-            hideAll();
-            document.getElementById('join-team-section').style.display = 'block';
-        }
-
-        // Function to show the team leader home
-        function showTeamLeaderHome() {
-            hideAll();
-            document.getElementById('team-leader-section').style.display = 'block';
-        }
-
-        // Function to hide all sections
-        function hideAll() {
-            const sections = document.querySelectorAll('.section');
-            sections.forEach(section => section.style.display = 'none');
-        }
-
-        // Initialize by showing the login form
-        document.addEventListener('DOMContentLoaded', showLogin);
     </script>
 </body>
-
 </html>
