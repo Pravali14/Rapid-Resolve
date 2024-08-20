@@ -5,9 +5,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Rapid Resolve App</title>
     <style>
-        /* Styles remain unchanged */
         .hidden {
             display: none;
+        }
+        .container {
+            margin: 20px;
+        }
+        button {
+            margin: 5px;
+        }
+        #message {
+            color: red;
         }
     </style>
 </head>
@@ -18,30 +26,8 @@
     <!-- Role Selection -->
     <div class="container" id="role-selection">
         <h2>Select Your Role</h2>
-        <button onclick="showUserSignup()">User</button>
-        <button onclick="showTeamLeaderSignup()">Team Leader</button>
-    </div>
-
-    <!-- User Signup Form -->
-    <div class="form-container hidden" id="user-signup">
-        <h2>User Signup</h2>
-        <input type="text" id="user-username" placeholder="Username" required>
-        <input type="email" id="user-email" placeholder="Email" required>
-        <input type="text" id="user-org" placeholder="Organization" required>
-        <input type="password" id="user-password" placeholder="Password" required>
-        <button onclick="signupUser()">Sign Up</button>
-        <button onclick="showRoleSelection()">Back</button>
-    </div>
-
-    <!-- Team Leader Signup Form -->
-    <div class="form-container hidden" id="team-leader-signup">
-        <h2>Team Leader Signup</h2>
-        <input type="text" id="team-leader-username" placeholder="Username" required>
-        <input type="email" id="team-leader-email" placeholder="Email" required>
-        <input type="text" id="team-leader-org" placeholder="Organization" required>
-        <input type="password" id="team-leader-password" placeholder="Password" required>
-        <button onclick="signupTeamLeader()">Sign Up</button>
-        <button onclick="showRoleSelection()">Back</button>
+        <button onclick="showUserLogin()">User Login</button>
+        <button onclick="showTeamLeaderLogin()">Team Leader Login</button>
     </div>
 
     <!-- User Login Form -->
@@ -50,7 +36,6 @@
         <input type="text" id="login-user-username" placeholder="Username" required>
         <input type="password" id="login-user-password" placeholder="Password" required>
         <button onclick="loginUser()">Login</button>
-        <button onclick="showRoleSelection()">Back</button>
     </div>
 
     <!-- Team Leader Login Form -->
@@ -59,7 +44,6 @@
         <input type="text" id="login-team-leader-username" placeholder="Username" required>
         <input type="password" id="login-team-leader-password" placeholder="Password" required>
         <button onclick="loginTeamLeader()">Login</button>
-        <button onclick="showRoleSelection()">Back</button>
     </div>
 
     <!-- User Home -->
@@ -140,16 +124,6 @@
             document.getElementById('role-selection').classList.remove('hidden');
         }
 
-        function showUserSignup() {
-            hideAll();
-            document.getElementById('user-signup').classList.remove('hidden');
-        }
-
-        function showTeamLeaderSignup() {
-            hideAll();
-            document.getElementById('team-leader-signup').classList.remove('hidden');
-        }
-
         function showUserLogin() {
             hideAll();
             document.getElementById('user-login').classList.remove('hidden');
@@ -192,12 +166,7 @@
             updateHistory();
         }
 
-        function signupUser() {
-            const username = document.getElementById('user-username').value;
-            const email = document.getElementById('user-email').value;
-            const organization = document.getElementById('user-org').value;
-            const password = document.getElementById('user-password').value;
-
+        function signupUser(username, email, organization, password) {
             if (window.users.find(user => user.username === username || user.email === email)) {
                 showMessage('Username or email already exists');
                 return;
@@ -209,12 +178,7 @@
             showUserLogin();
         }
 
-        function signupTeamLeader() {
-            const username = document.getElementById('team-leader-username').value;
-            const email = document.getElementById('team-leader-email').value;
-            const organization = document.getElementById('team-leader-org').value;
-            const password = document.getElementById('team-leader-password').value;
-
+        function signupTeamLeader(username, email, organization, password) {
             if (window.users.find(user => user.username === username || user.email === email)) {
                 showMessage('Username or email already exists');
                 return;
