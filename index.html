@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -14,7 +13,6 @@
             margin: 0;
             padding: 0;
         }
-
         .container, .form-container, .history-container {
             display: none;
             padding: 20px;
@@ -23,7 +21,6 @@
             max-width: 500px;
             border-radius: 10px;
         }
-
         input[type="text"], input[type="email"], input[type="password"] {
             width: 90%;
             padding: 10px;
@@ -31,7 +28,6 @@
             border: none;
             border-radius: 5px;
         }
-
         button {
             padding: 10px 20px;
             margin: 10px;
@@ -41,7 +37,6 @@
             color: white;
             cursor: pointer;
         }
-
         #message {
             display: none;
             background: #333;
@@ -49,12 +44,10 @@
             margin: 10px 0;
             border-radius: 5px;
         }
-
         .history-container ul {
             list-style-type: none;
             padding: 0;
         }
-
         .history-container li {
             background: #444;
             padding: 10px;
@@ -63,7 +56,6 @@
         }
     </style>
 </head>
-
 <body>
     <h1>Welcome to Rapid Resolve</h1>
     <div id="message"></div>
@@ -149,10 +141,41 @@
     </div>
 
     <script>
-        let users = [];
-        let teams = {};
-        let pendingRequests = {};
-        let history = {};
+        document.addEventListener('DOMContentLoaded', () => {
+            // Load data from local storage
+            loadData();
+            showRoleSelection();
+        });
+
+        function loadData() {
+            const usersData = localStorage.getItem('users');
+            const teamsData = localStorage.getItem('teams');
+            const historyData = localStorage.getItem('history');
+
+            if (usersData) {
+                window.users = JSON.parse(usersData);
+            } else {
+                window.users = [];
+            }
+
+            if (teamsData) {
+                window.teams = JSON.parse(teamsData);
+            } else {
+                window.teams = {};
+            }
+
+            if (historyData) {
+                window.history = JSON.parse(historyData);
+            } else {
+                window.history = {};
+            }
+        }
+
+        function saveData() {
+            localStorage.setItem('users', JSON.stringify(window.users));
+            localStorage.setItem('teams', JSON.stringify(window.teams));
+            localStorage.setItem('history', JSON.stringify(window.history));
+        }
 
         function showRoleSelection() {
             hideAll();
@@ -206,12 +229,13 @@
             const organization = document.getElementById('user-org').value;
             const password = document.getElementById('user-password').value;
 
-            if (users.find(user => user.username === username || user.email === email)) {
+            if (window.users.find(user => user.username === username || user.email === email)) {
                 showMessage('Username or email already exists');
                 return;
             }
 
-            users.push({ username, email, organization, password, role: 'user' });
+            window.users.push({ username, email, organization, password, role: 'user' });
+            saveData();
             showMessage('User signed up successfully');
             showUserLogin();
         }
@@ -222,13 +246,13 @@
             const organization = document.getElementById('team-leader-org').value;
             const password = document.getElementById('team-leader-password').value;
 
-            if (users.find(user => user.username === username || user.email === email)) {
+            if (window.users.find(user => user.username === username || user.email === email)) {
                 showMessage('Username or email already exists');
                 return;
             }
 
-            users.push({ username, email, organization, password, role: 'team-leader' });
-            history[username] = [];
+            window.users.push({ username, email, organization, password, role: 'team-leader' });
+            saveData();
             showMessage('Team Leader signed up successfully');
             showTeamLeaderLogin();
         }
@@ -236,7 +260,7 @@
         function loginUser() {
             const username = document.getElementById('login-user-username').value;
             const password = document.getElementById('login-user-password').value;
-            const user = users.find(user => user.username === username && user.password === password && user.role === 'user');
+            const user = window.users.find(user => user.username === username && user.password === password && user.role === 'user');
 
             if (!user) {
                 showMessage('Invalid username or password');
@@ -250,7 +274,7 @@
         function loginTeamLeader() {
             const username = document.getElementById('login-team-leader-username').value;
             const password = document.getElementById('login-team-leader-password').value;
-            const leader = users.find(user => user.username === username && user.password === password && user.role === 'team-leader');
+            const leader = window.users.find(user => user.username === username && user.password === password && user.role === 'team-leader');
 
             if (!leader) {
                 showMessage('Invalid username or password');
@@ -264,30 +288,37 @@
         function createTeam() {
             const teamCode = document.getElementById('team-code').value;
             const teamPassword = document.getElementById('team-password').value;
-            const leader = users.find(user => user.role === 'team-leader' && user.username === document.getElementById('login-team-leader-username').value);
+            const leaderUsername = document.getElementById('login-team-leader-username').value;
+            const leader = window.users.find(user => user.role === 'team-leader' && user.username === leaderUsername);
 
-            if (teams[teamCode]) {
+            if (window.teams[teamCode]) {
                 showMessage('Team code already exists');
                 return;
             }
 
-            teams[teamCode] = { teamPassword, leader: leader.username, members: [] };
+            window.teams[teamCode] = { teamPassword, leader: leader.username, members: [] };
+            saveData();
             showMessage('Team created successfully');
-            history[leader.username].push(`Created team: ${teamCode}`);
+            if (!window.history[leader.username]) {
+                window.history[leader.username] = [];
+            }
+            window.history[leader.username].push(`Created team: ${teamCode}`);
+            saveData();
             showTeamLeaderHome();
         }
 
         function joinTeam() {
             const teamCode = document.getElementById('join-team-code').value;
             const teamPassword = document.getElementById('join-team-password').value;
-            const team = teams[teamCode];
+            const team = window.teams[teamCode];
 
             if (!team || team.teamPassword !== teamPassword) {
                 showMessage('Invalid team code or password');
                 return;
             }
 
-            const user = users.find(user => user.role === 'user' && user.username === document.getElementById('login-user-username').value);
+            const username = document.getElementById('login-user-username').value;
+            const user = window.users.find(user => user.role === 'user' && user.username === username);
 
             if (team.members.includes(user.username)) {
                 showMessage('You are already in this team');
@@ -295,8 +326,13 @@
             }
 
             team.members.push(user.username);
+            saveData();
             showMessage('Joined team successfully');
-            history[team.leader].push(`User ${user.username} joined team: ${teamCode}`);
+            if (!window.history[team.leader]) {
+                window.history[team.leader] = [];
+            }
+            window.history[team.leader].push(`User ${user.username} joined team: ${teamCode}`);
+            saveData();
             showUserHome();
         }
 
@@ -304,8 +340,8 @@
             const leaderUsername = document.getElementById('login-team-leader-username').value;
             const historyList = document.getElementById('history-list');
             historyList.innerHTML = '';
-            if (history[leaderUsername]) {
-                history[leaderUsername].forEach(entry => {
+            if (window.history[leaderUsername]) {
+                window.history[leaderUsername].forEach(entry => {
                     const listItem = document.createElement('li');
                     listItem.textContent = entry;
                     historyList.appendChild(listItem);
@@ -327,10 +363,6 @@
                 element.style.display = 'none';
             });
         }
-
-        showRoleSelection();
     </script>
 </body>
-
 </html>
-
