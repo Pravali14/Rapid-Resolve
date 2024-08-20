@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rapid Resolve</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            margin-top: 50px;
+        }
+        h1, h2, h3 {
+            color: #333;
+        }
+        .button {
+            display: inline-block;
+            margin: 20px;
+            padding: 10px 20px;
+            background-color: #007BFF;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .button:hover {
+            background-color: #0056b3;
+        }
+        .form-container {
+            margin-top: 20px;
+        }
+        input[type="text"], input[type="password"] {
+            padding: 10px;
+            margin: 10px;
+            width: 80%;
+            max-width: 400px;
+            font-size: 16px;
+        }
+        input[type="submit"] {
+            padding: 10px 20px;
+            background-color: #007BFF;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        input[type="submit"]:hover {
+            background-color: #0056b3;
+        }
+        .message {
+            color: green;
+            margin-top: 20px;
+        }
+        .team-section {
+            margin-top: 30px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Welcome to Rapid Resolve</h1>
+        <button class="button" onclick="showSignup()">Signup</button>
+        <button class="button" onclick="showLogin()">Login</button>
+    </div>
+
+    <div id="signup-options" class="container" style="display: none;">
+        <h2>Signup</h2>
+        <button class="button" onclick="showUserSignup()">Signup as User</button>
+        <button class="button" onclick="showTeamLeaderSignup()">Signup as Team Leader</button>
+    </div>
+
+    <div id="login-options" class="container" style="display: none;">
+        <h2>Login</h2>
+        <button class="button" onclick="showUserLogin()">Login as User</button>
+        <button class="button" onclick="showTeamMemberLogin()">Login as Team Member</button>
+        <button class="button" onclick="showTeamLeaderLogin()">Login as Team Leader</button>
+    </div>
+
+    <div id="signup-user" class="form-container" style="display: none;">
+        <h3>Signup as User</h3>
+        <form onsubmit="signupUser(); return false;">
+            <input type="text" id="user-username" placeholder="Username" required><br>
+            <input type="text" id="user-email" placeholder="Business Email" required><br>
+            <input type="text" id="user-org" placeholder="Organization Name" required><br>
+            <input type="password" id="user-password" placeholder="Password" required><br>
+            <input type="submit" value="Signup">
+        </form>
+    </div>
+
+    <div id="signup-team-leader" class="form-container" style="display: none;">
+        <h3>Signup as Team Leader</h3>
+        <form onsubmit="signupTeamLeader(); return false;">
+            <input type="text" id="team-leader-username" placeholder="Username" required><br>
+            <input type="text" id="team-leader-email" placeholder="Business Email" required><br>
+            <input type="text" id="team-leader-org" placeholder="Organization Name" required><br>
+            <input type="password" id="team-leader-password" placeholder="Password" required><br>
+            <input type="submit" value="Signup">
+        </form>
+    </div>
+
+    <div id="login-user" class="form-container" style="display: none;">
+        <h3>Login as User</h3>
+        <form onsubmit="loginUser(); return false;">
+            <input type="text" id="login-user-username" placeholder="Username" required><br>
+            <input type="password" id="login-user-password" placeholder="Password" required><br>
+            <input type="submit" value="Login">
+        </form>
+    </div>
+
+    <div id="login-team-member" class="form-container" style="display: none;">
+        <h3>Login as Team Member</h3>
+        <form onsubmit="loginTeamMember(); return false;">
+            <input type="text" id="login-team-member-username" placeholder="Username" required><br>
+            <input type="password" id="login-team-member-password" placeholder="Password" required><br>
+            <input type="submit" value="Login">
+        </form>
+    </div>
+
+    <div id="login-team-leader" class="form-container" style="display: none;">
+        <h3>Login as Team Leader</h3>
+        <form onsubmit="loginTeamLeader(); return false;">
+            <input type="text" id="login-team-leader-username" placeholder="Username" required><br>
+            <input type="password" id="login-team-leader-password" placeholder="Password" required><br>
+            <input type="submit" value="Login">
+        </form>
+    </div>
+
+    <!-- Team Leader Home -->
+    <div id="team-leader-home" class="container" style="display: none;">
+        <h2>Team Leader Home</h2>
+        <button class="button" onclick="showCreateTeam()">Create a Team</button>
+        <div id="create-team" class="team-section" style="display: none;">
+            <h3>Create a Team</h3>
+            <form onsubmit="createTeam(); return false;">
+                <input type="text" id="team-code" placeholder="Team Code" required><br>
+                <input type="password" id="team-password" placeholder="Team Password" required><br>
+                <input type="submit" value="Create Team">
+            </form>
+        </div>
+        <div class="team-section">
+            <h3>Pending Requests</h3>
+            <ul id="pending-requests">
+                <!-- Notifications for user requests will appear here -->
+            </ul>
+        </div>
+    </div>
+
+    <!-- User Home -->
+    <div id="user-home" class="container" style="display: none;">
+        <h2>User Home</h2>
+        <button class="button" onclick="showJoinTeam()">Join a Team</button>
+        <div id="join-team" class="team-section" style="display: none;">
+            <h3>Join a Team</h3>
+            <form onsubmit="joinTeam(); return false;">
+                <input type="text" id="join-team-code" placeholder="Team Code" required><br>
+                <input type="password" id="join-team-password" placeholder="Team Password" required><br>
+                <input type="submit" value="Send Request">
+            </form>
+        </div>
+    </div>
+
+    <div id="message" class="message"></div>
+
+    <script>
+        const users = [];
+        const teams = {};
+        const pendingRequests = {};
+
+        function showSignup() {
+            hideAll();
+            document.getElementById('signup-options').style.display = 'block';
+        }
+
+        function showLogin() {
+            hideAll();
+            document.getElementById('login-options').style.display = 'block';
+        }
+
+        function showUserSignup() {
+            hideAll();
+            document.getElementById('signup-user').style.display = 'block';
+        }
+
+        function showTeamLeaderSignup() {
+            hideAll();
+            document.getElementById('signup-team-leader').style.display = 'block';
+        }
+
+        function showUserLogin() {
+            hideAll();
+            document.getElementById('login-user').style.display = 'block';
+        }
+
+        function showTeamMemberLogin() {
+            hideAll();
+            document.getElementById('login-team-member').style.display = 'block';
+        }
+
+        function showTeamLeaderLogin() {
+            hideAll();
+            document.getElementById('login-team-leader').style.display = 'block';
+        }
+
+        function showTeamLeaderHome() {
+            hideAll();
+            document.getElementById('team-leader-home').style.display = 'block';
+            updatePendingRequests();
+        }
+
+        function showUserHome() {
+            hideAll();
+            document.getElementById('user-home').style.display = 'block';
+        }
+
+        function showCreateTeam() {
+            document.getElementById('create-team').style.display = 'block';
+        }
+
+        function showJoinTeam() {
+            document.getElementById('join-team').style.display = 'block';
+        }
+
+        function hideAll() {
+            document.getElementById('signup-options').style.display = 'none';
+            document.getElementById('login-options').style.display = 'none';
+            document.getElementById('signup-user').style.display = 'none';
+            document.getElementById('signup-team-leader').style.display = 'none';
+            document.getElementById('login-user').style.display = 'none';
+            document.getElementById('login-team-member').style.display = 'none';
+            document.getElementById('login-team-leader').style.display = 'none';
+            document.getElementById('team-leader-home').style.display = 'none';
+            document.getElementById('user-home').style.display = 'none';
+            document.getElementById('create-team').style.display = 'none';
+            document.getElementById('join-team').style.display = 'none';
+        }
+
+        function showMessage(message) {
+            const messageDiv = document.getElementById('message');
+            messageDiv.innerText = message;
+            messageDiv.style.display = 'block';
+            setTimeout(() => {
+                messageDiv.style.display = 'none';
+            }, 3000);
+        }
+
+        function signupUser() {
+            const username = document.getElementById('user-username').value;
+            const email = document.getElementById('user-email').value;
+            const org = document.getElementById('user-org').value;
+            const password = document.getElementById('user-password').value;
+            const existingUser = users.find(user => user.username === username);
+            if (existingUser) {
+                showMessage('Username already exists. Please login.');
+            } else {
+                users.push({ username, email, org, password, role: 'user' });
+                showMessage('Signup Successful');
+                showUserHome();
+            }
+        }
+
+        function signupTeamLeader() {
+            const username = document.getElementById('team-leader-username').value;
+            const email = document.getElementById('team-leader-email').value;
+            const org = document.getElementById('team-leader-org').value;
+            const password = document.getElementById('team-leader-password').value;
+            const existingUser = users.find(user => user.username === username);
+            if (existingUser) {
+                showMessage('Username already exists. Please login.');
+            } else {
+                users.push({ username, email, org, password, role: 'team-leader' });
+                teams[username] = { teamCode: '', teamPassword: '', members: [], requests: [] };
+                showMessage('Signup Successful');
+                showTeamLeaderHome();
+            }
+        }
+
+        function loginUser() {
+            const username = document.getElementById('login-user-username').value;
+            const password = document.getElementById('login-user-password').value;
+            const user = users.find(user => user.username === username && user.password === password && user.role === 'user');
+            if (user) {
+                showMessage('Login Successful');
+                showUserHome();
+            } else {
+                showMessage('Invalid credentials');
+            }
+        }
+
+        function loginTeamMember() {
+            const username = document.getElementById('login-team-member-username').value;
+            const password = document.getElementById('login-team-member-password').value;
+            const user = users.find(user => user.username === username && user.password === password && user.role === 'team-member');
+            if (user) {
+                showMessage('Login Successful');
+                showUserHome();
+            } else {
+                showMessage('Invalid credentials');
+            }
+        }
+
+        function loginTeamLeader() {
+            const username = document.getElementById('login-team-leader-username').value;
+            const password = document.getElementById('login-team-leader-password').value;
+            const user = users.find(user => user.username === username && user.password === password && user.role === 'team-leader');
+            if (user) {
+                showMessage('Login Successful');
+                showTeamLeaderHome();
+            } else {
+                showMessage('Invalid credentials');
+            }
+        }
+
+        function createTeam() {
+            const teamCode = document.getElementById('team-code').value;
+            const teamPassword = document.getElementById('team-password').value;
+            const currentUser = users.find(user => user.role === 'team-leader');
+            if (currentUser) {
+                teams[currentUser.username].teamCode = teamCode;
+                teams[currentUser.username].teamPassword = teamPassword;
+                showMessage('Team Created Successfully');
+                showTeamLeaderHome();
+            } else {
+                showMessage('You must be a Team Leader to create a team');
+            }
+        }
+
+        function joinTeam() {
+            const teamCode = document.getElementById('join-team-code').value;
+            const teamPassword = document.getElementById('join-team-password').value;
+            const currentUser = users.find(user => user.role === 'user');
+            if (currentUser) {
+                const team = Object.values(teams).find(t => t.teamCode === teamCode && t.teamPassword === teamPassword);
+                if (team) {
+                    team.requests.push(currentUser.username);
+                    showMessage('Request Sent Successfully');
+                    showUserHome();
+                } else {
+                    showMessage('Invalid Team Code or Password');
+                }
+            } else {
+                showMessage('You must be a User to join a team');
+            }
+        }
+
+        function updatePendingRequests() {
+            const currentUser = users.find(user => user.role === 'team-leader');
+            if (currentUser) {
+                const team = teams[currentUser.username];
+                if (team) {
+                    const requestsList = document.getElementById('pending-requests');
+                    requestsList.innerHTML = '';
+                    team.requests.forEach(request => {
+                        const li = document.createElement('li');
+                        li.textContent = request;
+                        const acceptBtn = document.createElement('button');
+                        acceptBtn.textContent = 'Accept';
+                        acceptBtn.onclick = () => acceptRequest(request);
+                        const denyBtn = document.createElement('button');
+                        denyBtn.textContent = 'Deny';
+                        denyBtn.onclick = () => denyRequest(request);
+                        li.appendChild(acceptBtn);
+                        li.appendChild(denyBtn);
+                        requestsList.appendChild(li);
+                    });
+                }
+            }
+        }
+
+        function acceptRequest(username) {
+            const currentUser = users.find(user => user.role === 'team-leader');
+            if (currentUser) {
+                const team = teams[currentUser.username];
+                if (team) {
+                    team.members.push(username);
+                    team.requests = team.requests.filter(req => req !== username);
+                    showMessage(`Request from ${username} accepted`);
+                    updatePendingRequests();
+                }
+            }
+        }
+
+        function denyRequest(username) {
+            const currentUser = users.find(user => user.role === 'team-leader');
+            if (currentUser) {
+                const team = teams[currentUser.username];
+                if (team) {
+                    team.requests = team.requests.filter(req => req !== username);
+                    showMessage(`Request from ${username} denied`);
+                    updatePendingRequests();
+                }
+            }
+        }
+    </script>
+</body>
+</html>
