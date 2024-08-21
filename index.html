@@ -4,116 +4,199 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Rapid Resolve | Investigation Made Easy</title>
+    <title>Upload & Explore Raw | Rapid Resolve</title>
     <style>
         body {
             font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
             margin: 0;
             padding: 0;
-            background-color: #f4f4f4;
-            text-align: center;
         }
 
         .header {
             background-color: #004aad;
             color: white;
-            padding: 20px;
-            font-size: 28px;
+            padding: 15px;
+            font-size: 24px;
             font-weight: bold;
-        }
-
-        .menu-container {
-            display: flex;
-            justify-content: space-around;
-            flex-wrap: wrap;
-            padding: 20px;
-            margin-top: 30px;
-        }
-
-        .card {
-            background-color: white;
-            width: 250px;
-            padding: 20px;
-            border-radius: 15px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-            margin: 15px;
             text-align: center;
-            transition: transform 0.3s ease;
+        }
+
+        .upload-container {
+            text-align: center;
+            padding: 20px;
+        }
+
+        .upload-btn {
+            background-color: #004aad;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
             cursor: pointer;
-        }
-
-        .card:hover {
-            transform: translateY(-10px);
-        }
-
-        .card-icon {
-            font-size: 50px;
-            margin-bottom: 15px;
-            color: #004aad;
-        }
-
-        .card-title {
-            font-size: 20px;
-            margin-bottom: 10px;
-            font-weight: bold;
-            color: #333;
-        }
-
-        .card-description {
             font-size: 16px;
-            color: #666;
+            margin-top: 15px;
         }
 
-        @media (max-width: 768px) {
-            .menu-container {
-                flex-direction: column;
-            }
+        .upload-btn:hover {
+            background-color: #003080;
+        }
 
-            .card {
-                width: 80%;
-                margin: 15px auto;
-            }
+        .search-bar {
+            margin: 20px auto;
+            padding: 10px;
+            width: 80%;
+            max-width: 500px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+
+        .gallery {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin: 20px;
+        }
+
+        .image-card {
+            width: 200px;
+            margin: 15px;
+            padding: 10px;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        .image-card img {
+            width: 100%;
+            height: auto;
+            border-radius: 10px;
+        }
+
+        .image-card p {
+            margin: 10px 0;
+            font-size: 14px;
+            color: #333;
         }
     </style>
 </head>
 
 <body>
-    <div class="header">Rapid Resolve | Investigation Made Easy</div>
+    <div class="header">Upload & Explore Raw | Rapid Resolve</div>
 
-    <div class="menu-container">
-        <div class="card" onclick="uploadAndExplore()">
-            <div class="card-icon">📤</div>
-            <div class="card-title">Upload & Explore Raw</div>
-            <div class="card-description">Upload and explore raw images or files easily.</div>
-        </div>
-
-        <div class="card" onclick="automatedScanning()">
-            <div class="card-icon">🔍</div>
-            <div class="card-title">Automated Scanning</div>
-            <div class="card-description">Automated scanning and analysis of uploaded files.</div>
-        </div>
-
-        <div class="card" onclick="generateInsights()">
-            <div class="card-icon">📊</div>
-            <div class="card-title">Generate Insights</div>
-            <div class="card-description">Get insights based on the uploaded raw data.</div>
-        </div>
+    <div class="upload-container">
+        <input type="file" id="fileInput" accept="image/*">
+        <button class="upload-btn" onclick="uploadFile()">Upload & Secure Image</button>
     </div>
 
+    <div class="upload-container">
+        <input type="text" id="searchBar" class="search-bar" placeholder="Search by date or file name..." oninput="filterImages()">
+    </div>
+
+    <div class="gallery" id="imageGallery"></div>
+
     <script>
-        function uploadAndExplore() {
-            alert('Upload and Explore Raw feature will be implemented here.');
-            // Implement your logic here
+        let imageStorage = []; // Array to store uploaded images
+
+        function uploadFile() {
+            const fileInput = document.getElementById('fileInput');
+            if (fileInput.files.length === 0) {
+                alert('Please select a file to upload.');
+                return;
+            }
+
+            const file = fileInput.files[0];
+            const reader = new FileReader();
+
+            reader.onload = function (e) {
+                const encryptedData = encryptData(e.target.result); // Encrypt image data
+                const wrappedData = wrapData(encryptedData, file.name); // Wrap it with security
+
+                // Store wrapped data with file metadata
+                imageStorage.push({
+                    fileName: file.name,
+                    uploadDate: new Date().toLocaleDateString(),
+                    imageData: wrappedData,
+                    rawData: e.target.result // For displaying after decryption
+                });
+
+                displayImages(); // Update gallery
+                fileInput.value = ''; // Clear file input
+            };
+
+            reader.readAsDataURL(file);
         }
 
-        function automatedScanning() {
-            alert('Automated Scanning feature will be implemented here.');
-            // Implement your logic here
+        function encryptData(data) {
+            // Simple base64 encryption (for demonstration purposes)
+            return btoa(data);
         }
 
-        function generateInsights() {
-            alert('Generate Insights feature will be implemented here.');
-            // Implement your logic here
+        function wrapData(encryptedData, fileName) {
+            // Create a wrapper (for demonstration, simply adding metadata)
+            return JSON.stringify({
+                fileName: fileName,
+                encryptedData: encryptedData,
+                security: 'outer-layer-secured'
+            });
+        }
+
+        function displayImages() {
+            const gallery = document.getElementById('imageGallery');
+            gallery.innerHTML = ''; // Clear previous images
+
+            imageStorage.forEach((item, index) => {
+                const imageCard = document.createElement('div');
+                imageCard.className = 'image-card';
+
+                const img = document.createElement('img');
+                img.src = item.rawData; // Use rawData (decrypted) for display
+
+                const fileName = document.createElement('p');
+                fileName.textContent = item.fileName;
+
+                const uploadDate = document.createElement('p');
+                uploadDate.textContent = `Uploaded on: ${item.uploadDate}`;
+
+                imageCard.appendChild(img);
+                imageCard.appendChild(fileName);
+                imageCard.appendChild(uploadDate);
+
+                gallery.appendChild(imageCard);
+            });
+        }
+
+        function filterImages() {
+            const query = document.getElementById('searchBar').value.toLowerCase();
+            const filteredImages = imageStorage.filter(item =>
+                item.fileName.toLowerCase().includes(query) ||
+                item.uploadDate.toLowerCase().includes(query)
+            );
+
+            const gallery = document.getElementById('imageGallery');
+            gallery.innerHTML = ''; // Clear previous images
+
+            filteredImages.forEach((item, index) => {
+                const imageCard = document.createElement('div');
+                imageCard.className = 'image-card';
+
+                const img = document.createElement('img');
+                img.src = item.rawData; // Use rawData (decrypted) for display
+
+                const fileName = document.createElement('p');
+                fileName.textContent = item.fileName;
+
+                const uploadDate = document.createElement('p');
+                uploadDate.textContent = `Uploaded on: ${item.uploadDate}`;
+
+                imageCard.appendChild(img);
+                imageCard.appendChild(fileName);
+                imageCard.appendChild(uploadDate);
+
+                gallery.appendChild(imageCard);
+            });
         }
     </script>
 </body>
