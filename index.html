@@ -1,147 +1,121 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Team Management System</title>
+    <title>Rapid Resolve | Investigation Made Easy</title>
     <style>
-        /* Add your styling here */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+            text-align: center;
+        }
+
+        .header {
+            background-color: #004aad;
+            color: white;
+            padding: 20px;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .menu-container {
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            padding: 20px;
+            margin-top: 30px;
+        }
+
+        .card {
+            background-color: white;
+            width: 250px;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            margin: 15px;
+            text-align: center;
+            transition: transform 0.3s ease;
+            cursor: pointer;
+        }
+
+        .card:hover {
+            transform: translateY(-10px);
+        }
+
+        .card-icon {
+            font-size: 50px;
+            margin-bottom: 15px;
+            color: #004aad;
+        }
+
+        .card-title {
+            font-size: 20px;
+            margin-bottom: 10px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .card-description {
+            font-size: 16px;
+            color: #666;
+        }
+
+        @media (max-width: 768px) {
+            .menu-container {
+                flex-direction: column;
+            }
+
+            .card {
+                width: 80%;
+                margin: 15px auto;
+            }
+        }
     </style>
 </head>
+
 <body>
-    <!-- Signup Forms -->
-    <div id="signup-section">
-        <h2>Signup as User</h2>
-        <input type="text" id="user-username" placeholder="Username" required>
-        <input type="email" id="user-email" placeholder="Email" required>
-        <input type="text" id="user-org" placeholder="Organization" required>
-        <input type="password" id="user-password" placeholder="Password" required>
-        <button onclick="signupUser()">Signup as User</button>
-        <br><br>
-        <h2>Signup as Team Leader</h2>
-        <input type="text" id="team-leader-username" placeholder="Username" required>
-        <input type="email" id="team-leader-email" placeholder="Email" required>
-        <input type="text" id="team-leader-org" placeholder="Organization" required>
-        <input type="password" id="team-leader-password" placeholder="Password" required>
-        <button onclick="signupTeamLeader()">Signup as Team Leader</button>
+    <div class="header">Rapid Resolve | Investigation Made Easy</div>
+
+    <div class="menu-container">
+        <div class="card" onclick="uploadAndExplore()">
+            <div class="card-icon">📤</div>
+            <div class="card-title">Upload & Explore Raw</div>
+            <div class="card-description">Upload and explore raw images or files easily.</div>
+        </div>
+
+        <div class="card" onclick="automatedScanning()">
+            <div class="card-icon">🔍</div>
+            <div class="card-title">Automated Scanning</div>
+            <div class="card-description">Automated scanning and analysis of uploaded files.</div>
+        </div>
+
+        <div class="card" onclick="generateInsights()">
+            <div class="card-icon">📊</div>
+            <div class="card-title">Generate Insights</div>
+            <div class="card-description">Get insights based on the uploaded raw data.</div>
+        </div>
     </div>
-
-    <!-- Login Forms -->
-    <div id="login-section" style="display:none;">
-        <h2>Login as User</h2>
-        <input type="text" id="login-user-username" placeholder="Username" required>
-        <input type="password" id="login-user-password" placeholder="Password" required>
-        <button onclick="loginUser()">Login as User</button>
-        <br><br>
-        <h2>Login as Team Leader</h2>
-        <input type="text" id="login-team-leader-username" placeholder="Username" required>
-        <input type="password" id="login-team-leader-password" placeholder="Password" required>
-        <button onclick="loginTeamLeader()">Login as Team Leader</button>
-    </div>
-
-    <!-- Other Sections (Create Team, Join Team, etc.) -->
-    <!-- Add other sections as per your needs -->
-
-    <!-- Message Section -->
-    <div id="message" style="margin-top: 20px;"></div>
 
     <script>
-        // Store users and teams in local storage
-        let users = JSON.parse(localStorage.getItem('users')) || [];
-        let teams = JSON.parse(localStorage.getItem('teams')) || {};
-
-        function signupUser() {
-            const username = document.getElementById('user-username').value;
-            const email = document.getElementById('user-email').value;
-            const org = document.getElementById('user-org').value;
-            const password = document.getElementById('user-password').value;
-
-            if (username && email && org && password) {
-                if (users.find(u => u.username === username)) {
-                    showMessage('Username already exists. Please choose a different username.', 'error');
-                    return;
-                }
-
-                users.push({ username, email, org, password, role: 'user' });
-                localStorage.setItem('users', JSON.stringify(users)); // Save to local storage
-                showMessage('User signed up successfully! You can now log in.', 'success');
-                showLogin();
-            } else {
-                showMessage('Please fill in all fields.', 'error');
-            }
+        function uploadAndExplore() {
+            alert('Upload and Explore Raw feature will be implemented here.');
+            // Implement your logic here
         }
 
-        function signupTeamLeader() {
-            const username = document.getElementById('team-leader-username').value;
-            const email = document.getElementById('team-leader-email').value;
-            const org = document.getElementById('team-leader-org').value;
-            const password = document.getElementById('team-leader-password').value;
-
-            if (username && email && org && password) {
-                if (users.find(u => u.username === username)) {
-                    showMessage('Username already exists. Please choose a different username.', 'error');
-                    return;
-                }
-
-                users.push({ username, email, org, password, role: 'leader' });
-                teams[username] = { members: [], pendingRequests: [] };
-                localStorage.setItem('users', JSON.stringify(users)); // Save to local storage
-                localStorage.setItem('teams', JSON.stringify(teams)); // Save to local storage
-                showMessage('Team Leader signed up successfully! You can now log in.', 'success');
-                showLogin();
-            } else {
-                showMessage('Please fill in all fields.', 'error');
-            }
+        function automatedScanning() {
+            alert('Automated Scanning feature will be implemented here.');
+            // Implement your logic here
         }
 
-        function loginUser() {
-            const username = document.getElementById('login-user-username').value;
-            const password = document.getElementById('login-user-password').value;
-
-            const user = users.find(u => u.username === username && u.password === password && u.role === 'user');
-            if (user) {
-                hideAll();
-                // Display the user home or other sections as needed
-                showMessage('User logged in successfully!', 'success');
-            } else {
-                showMessage('Invalid username or password.', 'error');
-            }
-        }
-
-        function loginTeamLeader() {
-            const username = document.getElementById('login-team-leader-username').value;
-            const password = document.getElementById('login-team-leader-password').value;
-
-            const leader = users.find(u => u.username === username && u.password === password && u.role === 'leader');
-            if (leader) {
-                hideAll();
-                // Display the team leader home or other sections as needed
-                loadPendingRequests(username);
-                showMessage('Team Leader logged in successfully!', 'success');
-            } else {
-                showMessage('Invalid username or password.', 'error');
-            }
-        }
-
-        function showLogin() {
-            document.getElementById('signup-section').style.display = 'none';
-            document.getElementById('login-section').style.display = 'block';
-        }
-
-        function hideAll() {
-            document.getElementById('signup-section').style.display = 'none';
-            document.getElementById('login-section').style.display = 'none';
-            // Hide other sections as needed
-        }
-
-        function showMessage(message, type) {
-            const messageDiv = document.getElementById('message');
-            messageDiv.textContent = message;
-            messageDiv.style.color = type === 'success' ? 'green' : 'red';
-            setTimeout(() => {
-                messageDiv.textContent = '';
-            }, 3000);
+        function generateInsights() {
+            alert('Generate Insights feature will be implemented here.');
+            // Implement your logic here
         }
     </script>
 </body>
+
 </html>
