@@ -1,282 +1,184 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Rapid Resolve | Investigation Made Easy</title>
+    <title>Rapid Resolve - Investigation Made Easy</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
+            font-family: 'Arial', sans-serif;
+            background-color: #f0f4f8;
+            color: #333;
             margin: 0;
-            padding: 0;
+            padding: 20px;
+            text-align: center;
         }
 
-        .header {
-            background-color: #004aad;
-            color: white;
-            padding: 15px;
-            font-size: 24px;
-            font-weight: bold;
-            text-align: center;
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        header h1 {
+            font-size: 2.8em;
+            color: #004f97;
+        }
+
+        header h2 {
+            font-size: 1.6em;
+            color: #666;
         }
 
         .menu-container {
             display: flex;
-            justify-content: center;
-            margin: 20px;
+            justify-content: space-around;
+            margin-top: 40px;
         }
 
         .menu-card {
-            width: 300px;
-            margin: 15px;
-            padding: 20px;
-            background-color: white;
-            border-radius: 10px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            background: #fff;
+            padding: 25px;
+            width: 280px;
+            border-radius: 12px;
+            box-shadow: 0 6px 12px rgba(0,0,0,0.1);
             cursor: pointer;
-            text-align: center;
-            font-size: 18px;
-            color: #004aad;
+            transition: all 0.3s;
         }
 
         .menu-card:hover {
-            background-color: #f0f0f0;
+            transform: scale(1.08);
+        }
+
+        .menu-icon {
+            font-size: 3.5em;
+            margin-bottom: 12px;
+        }
+
+        .section {
+            margin-top: 40px;
         }
 
         .hidden {
             display: none;
         }
 
-        .upload-container, .outerfile-container {
-            padding: 20px;
-            text-align: center;
-        }
-
-        .upload-btn {
-            background-color: #004aad;
-            color: white;
-            padding: 10px 20px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 16px;
-            margin-top: 15px;
-        }
-
-        .upload-btn:hover {
-            background-color: #003080;
-        }
-
-        .search-bar {
-            margin: 20px auto;
-            padding: 10px;
-            width: 80%;
-            max-width: 500px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            font-size: 16px;
-        }
-
         .gallery {
             display: flex;
+            justify-content: space-around;
             flex-wrap: wrap;
-            justify-content: center;
-            margin: 20px;
-        }
-
-        .image-card {
-            width: 200px;
-            margin: 15px;
-            padding: 10px;
-            background-color: white;
-            border-radius: 10px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-            text-align: center;
-        }
-
-        .image-card img {
-            width: 100%;
-            height: auto;
-            border-radius: 10px;
-        }
-
-        .image-card p {
-            margin: 10px 0;
-            font-size: 14px;
-            color: #333;
-        }
-
-        .outerfile-container {
             margin-top: 20px;
+        }
+
+        .gallery img {
+            width: 160px;
+            height: 160px;
+            margin: 10px;
+            border-radius: 10px;
+            box-shadow: 0 6px 12px rgba(0,0,0,0.1);
+        }
+
+        .filter-container {
+            margin-top: 20px;
+        }
+
+        .filter-container input, .filter-container button {
+            margin: 5px;
+            padding: 12px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            font-size: 1em;
+        }
+
+        pre {
+            background-color: #eee;
             padding: 15px;
-            background-color: #e8e8e8;
-            border-radius: 8px;
-            font-family: monospace;
-            color: #333;
+            border-radius: 5px;
             text-align: left;
             white-space: pre-wrap;
-            max-width: 80%;
-            margin: auto;
         }
     </style>
 </head>
-
 <body>
-    <div class="header">Rapid Resolve | Investigation Made Easy</div>
+    <div class="container">
+        <header>
+            <h1>Rapid Resolve - Investigation Made Easy</h1>
+            <h2>Upload, Explore & Secure Raw Data</h2>
+        </header>
 
-    <!-- Main Menu -->
-    <div class="menu-container">
-        <div class="menu-card" onclick="showUploadSection()">
-            Upload & Explore Raw
-        </div>
-        <!-- Add more menu options here as needed -->
-    </div>
-
-    <!-- Hidden Upload & Explore Section -->
-    <div id="uploadSection" class="hidden">
-        <div class="upload-container">
-            <input type="file" id="fileInput" accept="image/*">
-            <button class="upload-btn" onclick="uploadFile()">Upload & Secure Image</button>
-        </div>
-
-        <div class="upload-container">
-            <input type="text" id="searchBar" class="search-bar" placeholder="Search by date or file name..." oninput="filterImages()">
+        <div class="menu-container">
+            <div class="menu-card" onclick="toggleSection('uploadExplore')">
+                <div class="menu-icon">📤</div>
+                <h3>Upload & Explore Raw</h3>
+                <p>(Securely upload, view, and filter raw images)</p>
+            </div>
+            <div class="menu-card" onclick="toggleSection('metadataSection')">
+                <div class="menu-icon">📑</div>
+                <h3>Generate & View Metadata</h3>
+                <p>(Create and view outer file metadata)</p>
+            </div>
         </div>
 
-        <div class="gallery" id="imageGallery"></div>
-    </div>
+        <div id="uploadExplore" class="section hidden">
+            <h2>Upload and Explore Raw Images</h2>
+            <input type="file" id="rawImageUpload" multiple accept="image/*">
+            <button onclick="uploadAndProcess()">Upload Images</button>
+            <div id="imageGallery" class="gallery"></div>
+            <div class="filter-container">
+                <input type="text" id="searchByName" placeholder="Search by file name">
+                <input type="date" id="searchByDate">
+                <button onclick="applyFilters()">Apply Filters</button>
+            </div>
+        </div>
 
-    <!-- Hidden Outer File Display Section -->
-    <div id="outerfileSection" class="outerfile-container hidden">
-        <strong>Outer File Data:</strong>
-        <pre id="outerFileContent"></pre>
+        <div id="metadataSection" class="section hidden">
+            <h2>Generate & View Metadata</h2>
+            <button onclick="generateMetadata()">Generate Metadata</button>
+            <pre id="metadataOutput"></pre>
+        </div>
     </div>
 
     <script>
-        let imageStorage = []; // Array to store uploaded images
-        let outerFileStorage = []; // Array to store outer file details
-
-        function showUploadSection() {
-            document.getElementById('uploadSection').classList.remove('hidden');
+        function toggleSection(sectionId) {
+            const section = document.getElementById(sectionId);
+            section.classList.toggle('hidden');
         }
 
-        function uploadFile() {
-            const fileInput = document.getElementById('fileInput');
-            if (fileInput.files.length === 0) {
-                alert('Please select a file to upload.');
-                return;
+        function uploadAndProcess() {
+            const files = document.getElementById('rawImageUpload').files;
+            const gallery = document.getElementById('imageGallery');
+            gallery.innerHTML = ""; // Clear previous gallery
+
+            for (let file of files) {
+                const imgElement = document.createElement('img');
+                imgElement.src = URL.createObjectURL(file);
+                gallery.appendChild(imgElement);
+
+                // Simulate processing the file (you can extend this)
+                console.log("Processing file: " + file.name);
             }
-
-            const file = fileInput.files[0];
-            const reader = new FileReader();
-
-            reader.onload = function (e) {
-                const encryptedData = encryptData(e.target.result); // Encrypt image data
-                const wrappedData = wrapData(encryptedData, file.name); // Wrap it with security
-
-                // Store wrapped data with file metadata
-                imageStorage.push({
-                    fileName: file.name,
-                    uploadDate: new Date().toLocaleDateString(),
-                    imageData: wrappedData,
-                    rawData: e.target.result // For displaying after decryption
-                });
-
-                outerFileStorage.push(wrappedData); // Store the wrapped data for display
-
-                displayImages(); // Update gallery
-                displayOuterFile(); // Show outer file content
-
-                fileInput.value = ''; // Clear file input
-            };
-
-            reader.readAsDataURL(file);
         }
 
-        function encryptData(data) {
-            // Simple base64 encryption (for demonstration purposes)
-            return btoa(data);
+        function applyFilters() {
+            const nameFilter = document.getElementById('searchByName').value.toLowerCase();
+            const dateFilter = document.getElementById('searchByDate').value;
+
+            // Filtering logic can be implemented here (e.g., filtering based on filename or date)
+            console.log("Filtering images by name:", nameFilter, "and date:", dateFilter);
         }
 
-        function wrapData(encryptedData, fileName) {
-            // Create a wrapper (for demonstration, simply adding metadata)
-            return JSON.stringify({
-                fileName: fileName,
-                encryptedData: encryptedData,
-                security: 'outer-layer-secured'
-            });
-        }
-
-        function displayImages() {
-            const gallery = document.getElementById('imageGallery');
-            gallery.innerHTML = ''; // Clear previous images
-
-            imageStorage.forEach((item, index) => {
-                const imageCard = document.createElement('div');
-                imageCard.className = 'image-card';
-
-                const img = document.createElement('img');
-                img.src = item.rawData; // Use rawData (decrypted) for display
-
-                const fileName = document.createElement('p');
-                fileName.textContent = item.fileName;
-
-                const uploadDate = document.createElement('p');
-                uploadDate.textContent = `Uploaded on: ${item.uploadDate}`;
-
-                imageCard.appendChild(img);
-                imageCard.appendChild(fileName);
-                imageCard.appendChild(uploadDate);
-
-                gallery.appendChild(imageCard);
-            });
-        }
-
-        function filterImages() {
-            const query = document.getElementById('searchBar').value.toLowerCase();
-            const filteredImages = imageStorage.filter(item =>
-                item.fileName.toLowerCase().includes(query) ||
-                item.uploadDate.toLowerCase().includes(query)
-            );
-
-            const gallery = document.getElementById('imageGallery');
-            gallery.innerHTML = ''; // Clear previous images
-
-            filteredImages.forEach((item, index) => {
-                const imageCard = document.createElement('div');
-                imageCard.className = 'image-card';
-
-                const img = document.createElement('img');
-                img.src = item.rawData; // Use rawData (decrypted) for display
-
-                const fileName = document.createElement('p');
-                fileName.textContent = item.fileName;
-
-                const uploadDate = document.createElement('p');
-                uploadDate.textContent = `Uploaded on: ${item.uploadDate}`;
-
-                imageCard.appendChild(img);
-                imageCard.appendChild(fileName);
-                imageCard.appendChild(uploadDate);
-
-                gallery.appendChild(imageCard);
-            });
-        }
-
-        function displayOuterFile() {
-            const outerfileSection = document.getElementById('outerfileSection');
-            outerfileSection.classList.remove('hidden'); // Show the outer file section
-
-            const outerFileContent = document.getElementById('outerFileContent');
-            outerFileContent.innerHTML = ''; // Clear previous content
-
-            outerFileStorage.forEach((item) => {
-                outerFileContent.textContent += item + '\n\n';
-            });
+        function generateMetadata() {
+            // Example metadata output
+            const metadataOutput = document.getElementById('metadataOutput');
+            metadataOutput.textContent = `
+            {
+                "filename": "image.raw",
+                "hash_algorithm": "SHA-256",
+                "hash_key": "d7a8fbb307d7809469ca9abbf87607a5c8dd29a150597fe8f0b1c914d4a40052",
+                "timestamp": "2024-08-19T12:00:00Z",
+                "device_type": "Hard Drive",
+                "source": "/dev/sdX"
+            }`;
         }
     </script>
 </body>
-
 </html>
