@@ -14,25 +14,26 @@
             text-align: center;
         }
 
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
+        header {
+            margin-bottom: 40px;
         }
 
         header h1 {
-            font-size: 2.8em;
+            font-size: 2.5em;
             color: #004f97;
+            margin-bottom: 10px;
         }
 
         header h2 {
-            font-size: 1.6em;
+            font-size: 1.2em;
             color: #666;
         }
 
         .menu-container {
             display: flex;
             justify-content: space-around;
-            margin-top: 40px;
+            flex-wrap: wrap;
+            margin-top: 20px;
         }
 
         .menu-card {
@@ -42,11 +43,13 @@
             border-radius: 12px;
             box-shadow: 0 6px 12px rgba(0,0,0,0.1);
             cursor: pointer;
+            margin: 10px;
             transition: all 0.3s;
         }
 
         .menu-card:hover {
-            transform: scale(1.08);
+            transform: scale(1.05);
+            box-shadow: 0 8px 16px rgba(0,0,0,0.2);
         }
 
         .menu-icon {
@@ -61,86 +64,69 @@
         .hidden {
             display: none;
         }
-
-        .gallery {
-            display: flex;
-            justify-content: space-around;
-            flex-wrap: wrap;
-            margin-top: 20px;
-        }
-
-        .gallery img {
-            width: 160px;
-            height: 160px;
-            margin: 10px;
-            border-radius: 10px;
-            box-shadow: 0 6px 12px rgba(0,0,0,0.1);
-        }
-
-        .filter-container {
-            margin-top: 20px;
-        }
-
-        .filter-container input, .filter-container button {
-            margin: 5px;
-            padding: 12px;
-            border-radius: 5px;
-            border: 1px solid #ccc;
+        
+        .menu-description {
             font-size: 1em;
-        }
-
-        pre {
-            background-color: #eee;
-            padding: 15px;
-            border-radius: 5px;
-            text-align: left;
-            white-space: pre-wrap;
+            color: #666;
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <header>
-            <h1>Rapid Resolve - Investigation Made Easy</h1>
-            <h2>Upload, Explore & Secure Raw Data</h2>
-        </header>
+    <header>
+        <h1>Rapid Resolve - Investigation Made Easy</h1>
+        <h2>Effortless Data Upload, Scanning, and Insights</h2>
+    </header>
 
-        <div class="menu-container">
-            <div class="menu-card" onclick="toggleSection('uploadExplore')">
-                <div class="menu-icon">📤</div>
-                <h3>Upload & Explore Raw</h3>
-                <p>(Securely upload, view, and filter raw images)</p>
-            </div>
-            <div class="menu-card" onclick="toggleSection('metadataSection')">
-                <div class="menu-icon">📑</div>
-                <h3>Generate & View Metadata</h3>
-                <p>(Create and view outer file metadata)</p>
-            </div>
+    <div class="menu-container">
+        <div class="menu-card" onclick="toggleSection('uploadExplore')">
+            <div class="menu-icon">📤</div>
+            <h3>Upload & Explore Raw</h3>
+            <p class="menu-description">(Upload and explore raw images securely)</p>
         </div>
+        <div class="menu-card" onclick="toggleSection('automatedScanning')">
+            <div class="menu-icon">🔍</div>
+            <h3>Automated Scanning</h3>
+            <p class="menu-description">(Run automated scans and analysis)</p>
+        </div>
+        <div class="menu-card" onclick="toggleSection('insightsSection')">
+            <div class="menu-icon">📊</div>
+            <h3>Insights</h3>
+            <p class="menu-description">(Generate insights based on uploaded raw files)</p>
+        </div>
+    </div>
 
-        <div id="uploadExplore" class="section hidden">
-            <h2>Upload and Explore Raw Images</h2>
-            <input type="file" id="rawImageUpload" multiple accept="image/*">
-            <button onclick="uploadAndProcess()">Upload Images</button>
-            <div id="imageGallery" class="gallery"></div>
-            <div class="filter-container">
-                <input type="text" id="searchByName" placeholder="Search by file name">
-                <input type="date" id="searchByDate">
-                <button onclick="applyFilters()">Apply Filters</button>
-            </div>
+    <!-- Sections for each menu item -->
+    <div id="uploadExplore" class="section hidden">
+        <h2>Upload and Explore Raw Images</h2>
+        <input type="file" id="rawImageUpload" multiple accept="image/*">
+        <button onclick="uploadAndProcess()">Upload Images</button>
+        <div id="imageGallery" class="gallery"></div>
+        <div class="filter-container">
+            <input type="text" id="searchByName" placeholder="Search by file name">
+            <input type="date" id="searchByDate">
+            <button onclick="applyFilters()">Apply Filters</button>
         </div>
+    </div>
 
-        <div id="metadataSection" class="section hidden">
-            <h2>Generate & View Metadata</h2>
-            <button onclick="generateMetadata()">Generate Metadata</button>
-            <pre id="metadataOutput"></pre>
-        </div>
+    <div id="automatedScanning" class="section hidden">
+        <h2>Automated Scanning and Analysis</h2>
+        <p>Feature coming soon...</p>
+    </div>
+
+    <div id="insightsSection" class="section hidden">
+        <h2>Generate Insights</h2>
+        <p>Feature coming soon...</p>
     </div>
 
     <script>
         function toggleSection(sectionId) {
-            const section = document.getElementById(sectionId);
-            section.classList.toggle('hidden');
+            // Hide all sections first
+            document.querySelectorAll('.section').forEach(section => {
+                section.classList.add('hidden');
+            });
+
+            // Show the selected section
+            document.getElementById(sectionId).classList.remove('hidden');
         }
 
         function uploadAndProcess() {
@@ -151,10 +137,23 @@
             for (let file of files) {
                 const imgElement = document.createElement('img');
                 imgElement.src = URL.createObjectURL(file);
+                imgElement.style.width = '150px';
+                imgElement.style.margin = '10px';
+                imgElement.style.borderRadius = '8px';
+                imgElement.style.boxShadow = '0 4px 8px rgba(0,0,0,0.1)';
                 gallery.appendChild(imgElement);
 
-                // Simulate processing the file (you can extend this)
+                // Placeholder: Here you would connect to the cloud API to generate a hash key
                 console.log("Processing file: " + file.name);
+
+                // Example of a secure hashing process (placeholder):
+                const hashKey = "exampleHashKey"; // This should be generated by your cloud API
+                const storedMetadata = {
+                    filename: file.name,
+                    hashKey: hashKey,
+                    uploadTime: new Date().toISOString()
+                };
+                console.log("Metadata Stored:", storedMetadata);
             }
         }
 
@@ -164,20 +163,6 @@
 
             // Filtering logic can be implemented here (e.g., filtering based on filename or date)
             console.log("Filtering images by name:", nameFilter, "and date:", dateFilter);
-        }
-
-        function generateMetadata() {
-            // Example metadata output
-            const metadataOutput = document.getElementById('metadataOutput');
-            metadataOutput.textContent = `
-            {
-                "filename": "image.raw",
-                "hash_algorithm": "SHA-256",
-                "hash_key": "d7a8fbb307d7809469ca9abbf87607a5c8dd29a150597fe8f0b1c914d4a40052",
-                "timestamp": "2024-08-19T12:00:00Z",
-                "device_type": "Hard Drive",
-                "source": "/dev/sdX"
-            }`;
         }
     </script>
 </body>
