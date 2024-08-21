@@ -3,166 +3,172 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Rapid Resolve - Investigation Made Easy</title>
+    <title>Rapid Resolve Investigation - Made Easy</title>
     <style>
         body {
-            font-family: 'Arial', sans-serif;
-            background-color: #f0f4f8;
-            color: #333;
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
             margin: 0;
             padding: 20px;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
             text-align: center;
         }
-
-        header {
-            margin-bottom: 40px;
+        h1 {
+            color: #333;
+            margin-bottom: 20px;
         }
-
-        header h1 {
-            font-size: 2.5em;
-            color: #004f97;
-            margin-bottom: 10px;
-        }
-
-        header h2 {
-            font-size: 1.2em;
-            color: #666;
-        }
-
-        .menu-container {
+        .menu-card {
             display: flex;
             justify-content: space-around;
             flex-wrap: wrap;
-            margin-top: 20px;
         }
-
-        .menu-card {
+        .card {
             background: #fff;
-            padding: 25px;
-            width: 280px;
-            border-radius: 12px;
-            box-shadow: 0 6px 12px rgba(0,0,0,0.1);
-            cursor: pointer;
+            border-radius: 8px;
+            padding: 20px;
             margin: 10px;
-            transition: all 0.3s;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            width: 220px;
         }
-
-        .menu-card:hover {
-            transform: scale(1.05);
-            box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+        .card:hover {
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
         }
-
-        .menu-icon {
-            font-size: 3.5em;
-            margin-bottom: 12px;
+        .card img {
+            width: 50px;
+            margin-bottom: 10px;
         }
-
-        .section {
-            margin-top: 40px;
+        .card h3 {
+            font-size: 18px;
+            margin-bottom: 10px;
         }
-
-        .hidden {
+        .card p {
+            font-size: 14px;
+            color: #666;
+        }
+        .card button {
+            margin-top: 10px;
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background 0.3s;
+        }
+        .card button:hover {
+            background-color: #0056b3;
+        }
+        input[type="file"] {
             display: none;
         }
-        
-        .menu-description {
-            font-size: 1em;
-            color: #666;
+        .file-label {
+            margin-top: 20px;
+            display: inline-block;
+            background-color: #28a745;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        .file-label:hover {
+            background-color: #218838;
+        }
+        .actions {
+            margin-top: 20px;
+        }
+        .actions button {
+            background-color: #dc3545;
+        }
+        .actions button:hover {
+            background-color: #c82333;
+        }
+        #uploaded-image {
+            max-width: 100%;
+            margin-top: 20px;
+            display: none;
         }
     </style>
 </head>
 <body>
-    <header>
-        <h1>Rapid Resolve - Investigation Made Easy</h1>
-        <h2>Effortless Data Upload, Scanning, and Insights</h2>
-    </header>
-
-    <div class="menu-container">
-        <div class="menu-card" onclick="toggleSection('uploadExplore')">
-            <div class="menu-icon">📤</div>
-            <h3>Upload & Explore Raw</h3>
-            <p class="menu-description">(Upload and explore raw images securely)</p>
+    <div class="container">
+        <h1>Rapid Resolve Investigation - Made Easy</h1>
+        <div class="menu-card">
+            <div class="card">
+                <img src="upload-icon.png" alt="Upload Icon">
+                <h3>Upload & Explore Raw</h3>
+                <p>Upload raw images and explore them with secure protection.</p>
+                <button onclick="triggerUpload()">Upload Raw</button>
+            </div>
+            <div class="card">
+                <img src="scan-icon.png" alt="Scan Icon">
+                <h3>Automated Scanning</h3>
+                <p>Perform automated scanning and analysis on raw data.</p>
+            </div>
+            <div class="card">
+                <img src="insights-icon.png" alt="Insights Icon">
+                <h3>Insights</h3>
+                <p>Generate insights based on uploaded raw data.</p>
+            </div>
         </div>
-        <div class="menu-card" onclick="toggleSection('automatedScanning')">
-            <div class="menu-icon">🔍</div>
-            <h3>Automated Scanning</h3>
-            <p class="menu-description">(Run automated scans and analysis)</p>
-        </div>
-        <div class="menu-card" onclick="toggleSection('insightsSection')">
-            <div class="menu-icon">📊</div>
-            <h3>Insights</h3>
-            <p class="menu-description">(Generate insights based on uploaded raw files)</p>
-        </div>
-    </div>
 
-    <!-- Sections for each menu item -->
-    <div id="uploadExplore" class="section hidden">
-        <h2>Upload and Explore Raw Images</h2>
-        <input type="file" id="rawImageUpload" multiple accept="image/*">
-        <button onclick="uploadAndProcess()">Upload Images</button>
-        <div id="imageGallery" class="gallery"></div>
-        <div class="filter-container">
-            <input type="text" id="searchByName" placeholder="Search by file name">
-            <input type="date" id="searchByDate">
-            <button onclick="applyFilters()">Apply Filters</button>
+        <!-- Hidden File Input -->
+        <input type="file" id="file-upload" accept="image/*" onchange="handleFileUpload(event)">
+        <label class="file-label" for="file-upload">Choose a file</label>
+
+        <!-- Uploaded Image Preview -->
+        <div id="image-preview">
+            <h3>Uploaded Image:</h3>
+            <img id="uploaded-image" alt="Uploaded Image">
+            <div class="actions">
+                <button onclick="confirmDelete()">Delete Image</button>
+            </div>
         </div>
-    </div>
-
-    <div id="automatedScanning" class="section hidden">
-        <h2>Automated Scanning and Analysis</h2>
-        <p>Feature coming soon...</p>
-    </div>
-
-    <div id="insightsSection" class="section hidden">
-        <h2>Generate Insights</h2>
-        <p>Feature coming soon...</p>
     </div>
 
     <script>
-        function toggleSection(sectionId) {
-            // Hide all sections first
-            document.querySelectorAll('.section').forEach(section => {
-                section.classList.add('hidden');
-            });
-
-            // Show the selected section
-            document.getElementById(sectionId).classList.remove('hidden');
+        // Function to trigger the file upload input
+        function triggerUpload() {
+            document.getElementById('file-upload').click();
         }
 
-        function uploadAndProcess() {
-            const files = document.getElementById('rawImageUpload').files;
-            const gallery = document.getElementById('imageGallery');
-            gallery.innerHTML = ""; // Clear previous gallery
+        // Handle the file upload
+        function handleFileUpload(event) {
+            const file = event.target.files[0];
+            if (file) {
+                // Ask for confirmation before uploading
+                if (confirm(`Are you sure you want to upload ${file.name}?`)) {
+                    // Perform hash generation and secure upload (simulated here)
+                    console.log('File selected:', file.name);
 
-            for (let file of files) {
-                const imgElement = document.createElement('img');
-                imgElement.src = URL.createObjectURL(file);
-                imgElement.style.width = '150px';
-                imgElement.style.margin = '10px';
-                imgElement.style.borderRadius = '8px';
-                imgElement.style.boxShadow = '0 4px 8px rgba(0,0,0,0.1)';
-                gallery.appendChild(imgElement);
-
-                // Placeholder: Here you would connect to the cloud API to generate a hash key
-                console.log("Processing file: " + file.name);
-
-                // Example of a secure hashing process (placeholder):
-                const hashKey = "exampleHashKey"; // This should be generated by your cloud API
-                const storedMetadata = {
-                    filename: file.name,
-                    hashKey: hashKey,
-                    uploadTime: new Date().toISOString()
-                };
-                console.log("Metadata Stored:", storedMetadata);
+                    // Display the uploaded image preview
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        document.getElementById('uploaded-image').src = e.target.result;
+                        document.getElementById('uploaded-image').style.display = 'block';
+                    };
+                    reader.readAsDataURL(file);
+                } else {
+                    console.log('Upload canceled.');
+                }
             }
         }
 
-        function applyFilters() {
-            const nameFilter = document.getElementById('searchByName').value.toLowerCase();
-            const dateFilter = document.getElementById('searchByDate').value;
-
-            // Filtering logic can be implemented here (e.g., filtering based on filename or date)
-            console.log("Filtering images by name:", nameFilter, "and date:", dateFilter);
+        // Confirm before deleting the uploaded image
+        function confirmDelete() {
+            if (confirm('Are you sure you want to delete this image?')) {
+                // Simulate deletion process (this is where you’d delete it from the cloud)
+                document.getElementById('uploaded-image').style.display = 'none';
+                document.getElementById('file-upload').value = ''; // Reset file input
+                console.log('Image deleted.');
+            } else {
+                console.log('Deletion canceled.');
+            }
         }
     </script>
 </body>
