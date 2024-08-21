@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Upload & Explore Raw | Rapid Resolve</title>
+    <title>Rapid Resolve | Investigation Made Easy</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -22,9 +22,36 @@
             text-align: center;
         }
 
-        .upload-container {
-            text-align: center;
+        .menu-container {
+            display: flex;
+            justify-content: center;
+            margin: 20px;
+        }
+
+        .menu-card {
+            width: 300px;
+            margin: 15px;
             padding: 20px;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            cursor: pointer;
+            text-align: center;
+            font-size: 18px;
+            color: #004aad;
+        }
+
+        .menu-card:hover {
+            background-color: #f0f0f0;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .upload-container, .outerfile-container {
+            padding: 20px;
+            text-align: center;
         }
 
         .upload-btn {
@@ -80,25 +107,60 @@
             font-size: 14px;
             color: #333;
         }
+
+        .outerfile-container {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #e8e8e8;
+            border-radius: 8px;
+            font-family: monospace;
+            color: #333;
+            text-align: left;
+            white-space: pre-wrap;
+            max-width: 80%;
+            margin: auto;
+        }
     </style>
 </head>
 
 <body>
-    <div class="header">Upload & Explore Raw | Rapid Resolve</div>
+    <div class="header">Rapid Resolve | Investigation Made Easy</div>
 
-    <div class="upload-container">
-        <input type="file" id="fileInput" accept="image/*">
-        <button class="upload-btn" onclick="uploadFile()">Upload & Secure Image</button>
+    <!-- Main Menu -->
+    <div class="menu-container">
+        <div class="menu-card" onclick="showUploadSection()">
+            Upload & Explore Raw
+        </div>
+        <!-- Add more menu options here as needed -->
     </div>
 
-    <div class="upload-container">
-        <input type="text" id="searchBar" class="search-bar" placeholder="Search by date or file name..." oninput="filterImages()">
+    <!-- Hidden Upload & Explore Section -->
+    <div id="uploadSection" class="hidden">
+        <div class="upload-container">
+            <input type="file" id="fileInput" accept="image/*">
+            <button class="upload-btn" onclick="uploadFile()">Upload & Secure Image</button>
+        </div>
+
+        <div class="upload-container">
+            <input type="text" id="searchBar" class="search-bar" placeholder="Search by date or file name..." oninput="filterImages()">
+        </div>
+
+        <div class="gallery" id="imageGallery"></div>
     </div>
 
-    <div class="gallery" id="imageGallery"></div>
+    <!-- Hidden Outer File Display Section -->
+    <div id="outerfileSection" class="outerfile-container hidden">
+        <strong>Outer File Data:</strong>
+        <pre id="outerFileContent"></pre>
+    </div>
 
     <script>
         let imageStorage = []; // Array to store uploaded images
+        let outerFileStorage = []; // Array to store outer file details
+
+        function showUploadSection() {
+            document.getElementById('uploadSection').classList.remove('hidden');
+        }
 
         function uploadFile() {
             const fileInput = document.getElementById('fileInput');
@@ -122,7 +184,11 @@
                     rawData: e.target.result // For displaying after decryption
                 });
 
+                outerFileStorage.push(wrappedData); // Store the wrapped data for display
+
                 displayImages(); // Update gallery
+                displayOuterFile(); // Show outer file content
+
                 fileInput.value = ''; // Clear file input
             };
 
@@ -196,6 +262,18 @@
                 imageCard.appendChild(uploadDate);
 
                 gallery.appendChild(imageCard);
+            });
+        }
+
+        function displayOuterFile() {
+            const outerfileSection = document.getElementById('outerfileSection');
+            outerfileSection.classList.remove('hidden'); // Show the outer file section
+
+            const outerFileContent = document.getElementById('outerFileContent');
+            outerFileContent.innerHTML = ''; // Clear previous content
+
+            outerFileStorage.forEach((item) => {
+                outerFileContent.textContent += item + '\n\n';
             });
         }
     </script>
