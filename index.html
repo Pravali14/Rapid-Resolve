@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rapid Resolve | Investigation Made Easy</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+            text-align: center;
+        }
+
+        .header {
+            background-color: #004aad;
+            color: white;
+            padding: 20px;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .menu-container {
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            padding: 20px;
+            margin-top: 30px;
+        }
+
+        .card {
+            background-color: white;
+            width: 250px;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            margin: 15px;
+            text-align: center;
+            transition: transform 0.3s ease;
+            cursor: pointer;
+        }
+
+        .card:hover {
+            transform: translateY(-10px);
+        }
+
+        .card-icon {
+            font-size: 50px;
+            margin-bottom: 15px;
+            color: #004aad;
+        }
+
+        .card-title {
+            font-size: 20px;
+            margin-bottom: 10px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .card-description {
+            font-size: 16px;
+            color: #666;
+        }
+
+        @media (max-width: 768px) {
+            .menu-container {
+                flex-direction: column;
+            }
+
+            .card {
+                width: 80%;
+                margin: 15px auto;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="header">Rapid Resolve | Investigation Made Easy</div>
+
+    <div class="menu-container">
+        <div class="card" onclick="uploadAndExplore()">
+            <div class="card-icon">📤</div>
+            <div class="card-title">Upload & Explore Raw</div>
+            <div class="card-description">Upload and explore raw images or files easily.</div>
+        </div>
+
+        <div class="card" onclick="automatedScanning()">
+            <div class="card-icon">🔍</div>
+            <div class="card-title">Automated Scanning</div>
+            <div class="card-description">Automated scanning and analysis of uploaded files.</div>
+        </div>
+
+        <div class="card" onclick="generateInsights()">
+            <div class="card-icon">📊</div>
+            <div class="card-title">Generate Insights</div>
+            <div class="card-description">Get insights based on the uploaded raw data.</div>
+        </div>
+    </div>
+
+    <script>
+        async function uploadAndExplore() {
+            const fileInput = document.createElement('input');
+            fileInput.type = 'file';
+            fileInput.accept = '.raw, .dd, .img';
+            fileInput.onchange = async () => {
+                const file = fileInput.files[0];
+                if (file) {
+                    const formData = new FormData();
+                    formData.append('file', file);
+
+                    const response = await fetch('/upload', {
+                        method: 'POST',
+                        body: formData
+                    });
+
+                    const result = await response.json();
+                    if (result.success) {
+                        alert('File uploaded successfully. Now starting exploration.');
+                    } else {
+                        alert('File upload failed.');
+                    }
+                }
+            };
+            fileInput.click();
+        }
+
+        function automatedScanning() {
+            alert('Automated Scanning feature will be implemented here.');
+            // Implement your logic here
+        }
+
+        function generateInsights() {
+            alert('Generate Insights feature will be implemented here.');
+            // Implement your logic here
+        }
+    </script>
+</body>
+
+</html>
